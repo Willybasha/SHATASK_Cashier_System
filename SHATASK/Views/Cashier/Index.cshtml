@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BusinessLayer.DTOS.CashierModels.CashierViewModel>
+
+@{
+    ViewData["Title"] = "Cashiers";
+}
+
+<h1>Cashiers</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Cashier</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Cashier ID</th>
+            <th>Cashier Name</th>
+            <th>Branch</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cashier in Model)
+        {
+            <tr>
+                <td>@cashier.Id</td>
+                <td>@cashier.CashierName</td>
+                <td>@cashier.BranchName</td> <!-- Assuming BranchName is part of CashierViewModel -->
+                <td>
+                    <a asp-action="Edit" asp-route-id="@cashier.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@cashier.Id" class="btn btn-info btn-sm">Details</a>
+                    <form asp-action="Delete" asp-route-id="@cashier.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this cashier?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

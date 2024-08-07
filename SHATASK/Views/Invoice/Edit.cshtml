@@ -1,0 +1,102 @@
+﻿@model BusinessLayer.DTOS.InvoiceDetailsModels.InvoiceViewModel
+
+@{
+    ViewData["Title"] = "Edit Invoice";
+}
+
+<h1>Edit Invoice</h1>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="InvoiceHeader.Id" />
+
+    <div class="form-group">
+        <label asp-for="InvoiceHeader.CustomerName" class="control-label"></label>
+        <input asp-for="InvoiceHeader.CustomerName" class="form-control" />
+        <span asp-validation-for="InvoiceHeader.CustomerName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="InvoiceHeader.Invoicedate" class="control-label"></label>
+        <input asp-for="InvoiceHeader.Invoicedate" class="form-control" type="date" />
+        <span asp-validation-for="InvoiceHeader.Invoicedate" class="text-danger"></span>
+    </div>
+
+    <h3>Invoice Items</h3>
+    <table class="table" id="invoiceDetailsTable">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Item Count</th>
+                <th>Item Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.InvoiceDetails.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="InvoiceDetails[i].Id" type="hidden" />
+                        <input asp-for="InvoiceDetails[i].ItemName" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="InvoiceDetails[i].ItemCount" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="InvoiceDetails[i].ItemPrice" class="form-control" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="removeItem(this)">Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <button type="button" class="btn btn-secondary" onclick="addItem()">Add New Item</button>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    let itemCount = @Model.InvoiceDetails.Count;
+
+    function addItem() {
+        const table = document.getElementById('invoiceDetailsTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+
+        newRow.innerHTML = `
+                <td>
+                    <input name="InvoiceDetails[${itemCount}].ItemName" class="form-control" />
+                </td>
+                <td>
+                    <input name="InvoiceDetails[${itemCount}].ItemCount" class="form-control" />
+                </td>
+                <td>
+                    <input name="InvoiceDetails[${itemCount}].ItemPrice" class="form-control" />
+                </td>
+                <td>
+                    <input type="hidden" name="InvoiceDetails[${itemCount}].Id" value="0" />
+                    <button type="button" class="btn btn-danger" onclick="removeItem(this)">Remove</button>
+                </td>
+            `;
+        itemCount++;
+    }
+
+    function removeItem(element) {
+        const row = element.closest('tr');
+        row.remove();
+    }
+</script>
+
+
